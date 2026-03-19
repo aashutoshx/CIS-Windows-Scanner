@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "benchmark": "CIS Microsoft Windows Server 2022 Benchmark",
+    "version": "3.0.0",
+    "depth": "essential",
+    "system_type": "windows_server"
+  },
+  "controls": [
+    {
+      "id": "1.1.1",
+      "name": "Password History >= 24",
+      "description": "Enforce remembrance of 24 or more previous passwords.",
+      "category": "Account Policies",
+      "severity": "Medium",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "PasswordHistorySize",
+        "expected": 24,
+        "operator": "gte"
+      },
+      "remediation": "Computer Configuration > Account Policies > Password Policy > Enforce password history: 24",
+      "references": "CIS Windows Server 2022 1.1.1"
+    },
+    {
+      "id": "1.1.4",
+      "name": "Minimum Password Length >= 14",
+      "description": "All passwords must be at least 14 characters.",
+      "category": "Account Policies",
+      "severity": "High",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "MinimumPasswordLength",
+        "expected": 14,
+        "operator": "gte"
+      },
+      "remediation": "Set Minimum password length to 14 or more",
+      "references": "CIS Windows Server 2022 1.1.4"
+    },
+    {
+      "id": "1.2.1",
+      "name": "Account Lockout Threshold <= 5",
+      "description": "Lock accounts after 5 or fewer failed login attempts.",
+      "category": "Account Policies",
+      "severity": "High",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "LockoutBadCount",
+        "expected": 5,
+        "operator": "lte"
+      },
+      "remediation": "Set Account lockout threshold to 5",
+      "references": "CIS Windows Server 2022 1.2.1"
+    },
+    {
+      "id": "2.1.1",
+      "name": "Remote Registry: Disabled",
+      "description": "Remote Registry service should be disabled on servers not requiring it.",
+      "category": "Services",
+      "severity": "High",
+      "check_type": "service",
+      "check_params": {
+        "service_name": "RemoteRegistry",
+        "expected_startup": "disabled",
+        "operator": "eq"
+      },
+      "remediation": "Disable Remote Registry service via services.msc",
+      "references": "CIS 5.29"
+    },
+    {
+      "id": "2.1.2",
+      "name": "Telnet Client: Not Installed / Disabled",
+      "description": "Telnet service transmits data in cleartext and must be disabled.",
+      "category": "Services",
+      "severity": "Critical",
+      "check_type": "service",
+      "check_params": {
+        "service_name": "Telnet",
+        "expected_startup": "not_installed",
+        "operator": "eq"
+      },
+      "remediation": "Remove Telnet Client feature: Remove-WindowsFeature Telnet-Client",
+      "references": "CIS 5.41"
+    },
+    {
+      "id": "2.1.3",
+      "name": "SNMP Service: Disabled",
+      "description": "SNMP must not be running unless explicitly required and secured.",
+      "category": "Services",
+      "severity": "High",
+      "check_type": "service",
+      "check_params": {
+        "service_name": "SNMP",
+        "expected_startup": "not_installed",
+        "operator": "eq"
+      },
+      "remediation": "Remove SNMP feature if not required: Remove-WindowsFeature SNMP-Service",
+      "references": "CIS 5.39"
+    },
+    {
+      "id": "2.1.4",
+      "name": "IIS (W3SVC): Disabled if not required",
+      "description": "IIS should not be running on non-web servers.",
+      "category": "Services",
+      "severity": "High",
+      "check_type": "service",
+      "check_params": {
+        "service_name": "W3SVC",
+        "expected_startup": "disabled",
+        "operator": "eq"
+      },
+      "remediation": "Remove IIS role if not required: Remove-WindowsFeature Web-Server",
+      "references": "CIS 5.6"
+    },
+    {
+      "id": "3.1.1",
+      "name": "Windows Firewall - Domain Profile: On",
+      "description": "Windows Firewall must be active on the Domain profile.",
+      "category": "Windows Firewall",
+      "severity": "Critical",
+      "check_type": "firewall",
+      "check_params": {
+        "profile": "domain",
+        "setting": "state",
+        "expected": "on",
+        "operator": "eq"
+      },
+      "remediation": "Enable Windows Firewall Domain profile",
+      "references": "CIS 9.1.1"
+    },
+    {
+      "id": "3.1.2",
+      "name": "Windows Firewall - Public Profile: On",
+      "description": "Windows Firewall must be active on the Public profile.",
+      "category": "Windows Firewall",
+      "severity": "Critical",
+      "check_type": "firewall",
+      "check_params": {
+        "profile": "public",
+        "setting": "state",
+        "expected": "on",
+        "operator": "eq"
+      },
+      "remediation": "Enable Windows Firewall Public profile",
+      "references": "CIS 9.3.1"
+    },
+    {
+      "id": "4.1.1",
+      "name": "LM Authentication Level: Send NTLMv2 Only",
+      "description": "LmCompatibilityLevel must be 5 to enforce NTLMv2.",
+      "category": "Authentication",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        "value_name": "LmCompatibilityLevel",
+        "expected": 5,
+        "operator": "gte"
+      },
+      "remediation": "Set LmCompatibilityLevel = 5",
+      "references": "CIS 2.3.11.7"
+    },
+    {
+      "id": "4.1.2",
+      "name": "WDigest Credentials in Memory: Disabled",
+      "description": "WDigest must not cache plaintext credentials in memory.",
+      "category": "Authentication",
+      "severity": "Critical",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest",
+        "value_name": "UseLogonCredential",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set UseLogonCredential = 0",
+      "references": "CIS 18.3.7"
+    },
+    {
+      "id": "4.2.1",
+      "name": "UAC: Admin Approval Mode Enabled",
+      "description": "Enable UAC for all administrators.",
+      "category": "User Account Control",
+      "severity": "Critical",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+        "value_name": "EnableLUA",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Set EnableLUA = 1",
+      "references": "CIS 2.3.17.1"
+    },
+    {
+      "id": "5.1.1",
+      "name": "Audit Logon Events: Success and Failure",
+      "description": "Logon and logoff events must be fully audited.",
+      "category": "Audit Policy",
+      "severity": "High",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Logon",
+        "expected": "Success and Failure",
+        "operator": "eq"
+      },
+      "remediation": "auditpol /set /subcategory:'Logon' /success:enable /failure:enable",
+      "references": "CIS 17.5.4"
+    },
+    {
+      "id": "5.1.2",
+      "name": "Audit Security System Extension: Success",
+      "description": "Security system extension events must be audited.",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Security System Extension",
+        "expected": "Success",
+        "operator": "contains"
+      },
+      "remediation": "auditpol /set /subcategory:'Security System Extension' /success:enable",
+      "references": "CIS 17.9.4"
+    },
+    {
+      "id": "5.1.3",
+      "name": "Audit System Integrity: Success and Failure",
+      "description": "Integrity violations must be audited.",
+      "category": "Audit Policy",
+      "severity": "High",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "System Integrity",
+        "expected": "Success and Failure",
+        "operator": "eq"
+      },
+      "remediation": "auditpol /set /subcategory:'System Integrity' /success:enable /failure:enable",
+      "references": "CIS 17.9.5"
+    },
+    {
+      "id": "6.1.1",
+      "name": "WinRM Service: Basic Authentication Disabled",
+      "description": "WinRM Service must not use Basic authentication.",
+      "category": "Remote Management",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\WinRM\\Service",
+        "value_name": "AllowBasic",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set AllowBasic = 0 for WinRM Service",
+      "references": "CIS 18.9.102.2.1"
+    }
+  ]
+}

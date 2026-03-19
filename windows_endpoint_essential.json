@@ -1,0 +1,464 @@
+{
+  "meta": {
+    "benchmark": "CIS Microsoft Windows 10 Enterprise Benchmark",
+    "version": "3.0.0",
+    "depth": "essential",
+    "system_type": "windows_endpoint"
+  },
+  "controls": [
+    {
+      "id": "1.1.1",
+      "name": "Password History >= 24",
+      "description": "Enforce the remembrance of 24 or more previous passwords to prevent reuse.",
+      "category": "Account Policies",
+      "severity": "Medium",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "PasswordHistorySize",
+        "expected": 24,
+        "operator": "gte"
+      },
+      "remediation": "Computer Configuration > Windows Settings > Security Settings > Account Policies > Password Policy > Enforce password history: 24",
+      "references": "CIS 1.1.1 | STIG WN10-AC-000005"
+    },
+    {
+      "id": "1.1.2",
+      "name": "Maximum Password Age <= 365 days",
+      "description": "Passwords must expire within 365 days (recommend 60 days).",
+      "category": "Account Policies",
+      "severity": "Medium",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "MaximumPasswordAge",
+        "expected": 365,
+        "operator": "lte"
+      },
+      "remediation": "Computer Configuration > Account Policies > Password Policy > Maximum password age: 60",
+      "references": "CIS 1.1.2 | NIST SP 800-53 IA-5"
+    },
+    {
+      "id": "1.1.3",
+      "name": "Minimum Password Age >= 1 day",
+      "description": "Passwords cannot be changed more than once per day, preventing bypass of history.",
+      "category": "Account Policies",
+      "severity": "Medium",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "MinimumPasswordAge",
+        "expected": 1,
+        "operator": "gte"
+      },
+      "remediation": "Computer Configuration > Account Policies > Password Policy > Minimum password age: 1",
+      "references": "CIS 1.1.3"
+    },
+    {
+      "id": "1.1.4",
+      "name": "Minimum Password Length >= 14",
+      "description": "Passwords must be at least 14 characters long.",
+      "category": "Account Policies",
+      "severity": "High",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "MinimumPasswordLength",
+        "expected": 14,
+        "operator": "gte"
+      },
+      "remediation": "Computer Configuration > Account Policies > Password Policy > Minimum password length: 14",
+      "references": "CIS 1.1.4 | NIST SP 800-63B"
+    },
+    {
+      "id": "1.1.5",
+      "name": "Password Complexity Enabled",
+      "description": "Passwords must meet complexity requirements (uppercase, lowercase, digit, symbol).",
+      "category": "Account Policies",
+      "severity": "High",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "PasswordComplexity",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Computer Configuration > Account Policies > Password Policy > Password must meet complexity requirements: Enabled",
+      "references": "CIS 1.1.5"
+    },
+    {
+      "id": "1.2.1",
+      "name": "Account Lockout Threshold <= 5",
+      "description": "Lock accounts after no more than 5 invalid login attempts to prevent brute-force.",
+      "category": "Account Policies",
+      "severity": "High",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "LockoutBadCount",
+        "expected": 5,
+        "operator": "lte"
+      },
+      "remediation": "Computer Configuration > Account Policies > Account Lockout Policy > Account lockout threshold: 5",
+      "references": "CIS 1.2.1 | STIG WN10-AC-000015"
+    },
+    {
+      "id": "1.2.2",
+      "name": "Account Lockout Duration >= 15 minutes",
+      "description": "Locked accounts remain locked for at least 15 minutes.",
+      "category": "Account Policies",
+      "severity": "Medium",
+      "check_type": "security_policy",
+      "check_params": {
+        "section": "System Access",
+        "policy_key": "LockoutDuration",
+        "expected": 15,
+        "operator": "gte"
+      },
+      "remediation": "Computer Configuration > Account Policies > Account Lockout Policy > Account lockout duration: 15",
+      "references": "CIS 1.2.2"
+    },
+    {
+      "id": "2.3.1",
+      "name": "User Account Control: Enable Admin Approval Mode",
+      "description": "EnableLUA must be enabled to enforce UAC for all administrators.",
+      "category": "User Account Control",
+      "severity": "Critical",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+        "value_name": "EnableLUA",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\EnableLUA = 1",
+      "references": "CIS 2.3.17.1 | STIG WN10-SO-000195"
+    },
+    {
+      "id": "2.3.2",
+      "name": "UAC: Admin Prompt Behaviour - Prompt for Consent on Secure Desktop",
+      "description": "Admins must be prompted on the secure desktop when elevating.",
+      "category": "User Account Control",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+        "value_name": "ConsentPromptBehaviorAdmin",
+        "expected": 2,
+        "operator": "eq"
+      },
+      "remediation": "Set ConsentPromptBehaviorAdmin = 2 (Prompt for consent on the secure desktop)",
+      "references": "CIS 2.3.17.2"
+    },
+    {
+      "id": "2.3.3",
+      "name": "UAC: User Prompt Behaviour - Auto Deny Elevation",
+      "description": "Standard users should be denied elevation requests automatically.",
+      "category": "User Account Control",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+        "value_name": "ConsentPromptBehaviorUser",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set ConsentPromptBehaviorUser = 0 (Automatically deny elevation requests)",
+      "references": "CIS 2.3.17.3"
+    },
+    {
+      "id": "2.3.4",
+      "name": "UAC: Prompt on Secure Desktop",
+      "description": "Elevation prompts must be displayed on the secure desktop.",
+      "category": "User Account Control",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System",
+        "value_name": "PromptOnSecureDesktop",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Set PromptOnSecureDesktop = 1",
+      "references": "CIS 2.3.17.5"
+    },
+    {
+      "id": "3.1.1",
+      "name": "Windows Firewall - Domain Profile: State = On",
+      "description": "Windows Defender Firewall must be active on the Domain network profile.",
+      "category": "Windows Firewall",
+      "severity": "Critical",
+      "check_type": "firewall",
+      "check_params": {
+        "profile": "domain",
+        "setting": "state",
+        "expected": "on",
+        "operator": "eq"
+      },
+      "remediation": "Enable Windows Defender Firewall for Domain profile via Group Policy or Settings",
+      "references": "CIS 9.1.1 | STIG WN10-NE-000015"
+    },
+    {
+      "id": "3.1.2",
+      "name": "Windows Firewall - Private Profile: State = On",
+      "description": "Windows Defender Firewall must be active on the Private network profile.",
+      "category": "Windows Firewall",
+      "severity": "Critical",
+      "check_type": "firewall",
+      "check_params": {
+        "profile": "private",
+        "setting": "state",
+        "expected": "on",
+        "operator": "eq"
+      },
+      "remediation": "Enable Windows Defender Firewall for Private profile",
+      "references": "CIS 9.2.1"
+    },
+    {
+      "id": "3.1.3",
+      "name": "Windows Firewall - Public Profile: State = On",
+      "description": "Windows Defender Firewall must be active on the Public network profile.",
+      "category": "Windows Firewall",
+      "severity": "Critical",
+      "check_type": "firewall",
+      "check_params": {
+        "profile": "public",
+        "setting": "state",
+        "expected": "on",
+        "operator": "eq"
+      },
+      "remediation": "Enable Windows Defender Firewall for Public profile",
+      "references": "CIS 9.3.1"
+    },
+    {
+      "id": "4.1.1",
+      "name": "LAN Manager Authentication Level >= 5",
+      "description": "Only NTLMv2 authentication should be accepted. LmCompatibilityLevel must be 5.",
+      "category": "Authentication",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        "value_name": "LmCompatibilityLevel",
+        "expected": 5,
+        "operator": "gte"
+      },
+      "remediation": "Set HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\LmCompatibilityLevel = 5",
+      "references": "CIS 2.3.11.7 | STIG WN10-SO-000165"
+    },
+    {
+      "id": "4.1.2",
+      "name": "Do Not Store LAN Manager Hash",
+      "description": "LM hashes should not be stored in Active Directory or local SAM databases.",
+      "category": "Authentication",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        "value_name": "NoLMHash",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\NoLMHash = 1",
+      "references": "CIS 2.3.11.2"
+    },
+    {
+      "id": "4.1.3",
+      "name": "WDigest Authentication Disabled",
+      "description": "WDigest must not store credentials in memory (prevents credential dumping).",
+      "category": "Authentication",
+      "severity": "Critical",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest",
+        "value_name": "UseLogonCredential",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest\\UseLogonCredential = 0",
+      "references": "CIS 18.3.7 | STIG WN10-CC-000038"
+    },
+    {
+      "id": "5.1.1",
+      "name": "Remote Registry Service: Disabled",
+      "description": "Remote Registry service should be disabled to prevent remote registry manipulation.",
+      "category": "Services",
+      "severity": "High",
+      "check_type": "service",
+      "check_params": {
+        "service_name": "RemoteRegistry",
+        "expected_startup": "disabled",
+        "operator": "eq"
+      },
+      "remediation": "Set Remote Registry service Startup Type to Disabled via services.msc or Group Policy",
+      "references": "CIS 5.28 | STIG WN10-00-000175"
+    },
+    {
+      "id": "5.1.2",
+      "name": "Print Spooler: Disabled (if not required)",
+      "description": "Print Spooler should be disabled on systems that do not need printing (PrintNightmare).",
+      "category": "Services",
+      "severity": "High",
+      "check_type": "service",
+      "check_params": {
+        "service_name": "Spooler",
+        "expected_startup": "disabled",
+        "operator": "eq"
+      },
+      "remediation": "Disable the Print Spooler service on non-printing workstations",
+      "references": "CIS 5.29 | CVE-2021-34527 (PrintNightmare)"
+    },
+    {
+      "id": "6.1.1",
+      "name": "Audit Credential Validation: Success and Failure",
+      "description": "Both successful and failed credential validation attempts must be audited.",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Credential Validation",
+        "expected": "Success and Failure",
+        "operator": "eq"
+      },
+      "remediation": "auditpol /set /subcategory:'Credential Validation' /success:enable /failure:enable",
+      "references": "CIS 17.1.1"
+    },
+    {
+      "id": "6.1.2",
+      "name": "Audit Logon Events: Success and Failure",
+      "description": "Both successful and failed logon events must be audited.",
+      "category": "Audit Policy",
+      "severity": "High",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Logon",
+        "expected": "Success and Failure",
+        "operator": "eq"
+      },
+      "remediation": "auditpol /set /subcategory:'Logon' /success:enable /failure:enable",
+      "references": "CIS 17.5.4 | STIG WN10-AU-000035"
+    },
+    {
+      "id": "6.1.3",
+      "name": "Audit Account Lockout: Failure",
+      "description": "Failed account lockout events must be audited.",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Account Lockout",
+        "expected": "Failure",
+        "operator": "contains"
+      },
+      "remediation": "auditpol /set /subcategory:'Account Lockout' /failure:enable",
+      "references": "CIS 17.5.1"
+    },
+    {
+      "id": "6.1.4",
+      "name": "Audit Process Creation: Success",
+      "description": "Successful process creation events must be audited (enables command-line logging).",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Process Creation",
+        "expected": "Success",
+        "operator": "contains"
+      },
+      "remediation": "auditpol /set /subcategory:'Process Creation' /success:enable",
+      "references": "CIS 17.8.1"
+    },
+    {
+      "id": "7.1.1",
+      "name": "Autorun Disabled for All Drives",
+      "description": "AutoRun must be disabled for all drives to prevent malware from auto-executing.",
+      "category": "Security Settings",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer",
+        "value_name": "NoDriveTypeAutoRun",
+        "expected": 255,
+        "operator": "eq"
+      },
+      "remediation": "Set NoDriveTypeAutoRun = 255 (0xFF) to disable AutoRun for all drive types",
+      "references": "CIS 18.8.45.2"
+    },
+    {
+      "id": "7.1.2",
+      "name": "Anonymous Access Restricted",
+      "description": "Anonymous access to the SAM accounts and shares must be restricted.",
+      "category": "Security Settings",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        "value_name": "RestrictAnonymous",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\RestrictAnonymous = 1",
+      "references": "CIS 2.3.10.2"
+    },
+    {
+      "id": "7.1.3",
+      "name": "Anonymous SAM Enumeration Restricted",
+      "description": "Anonymous enumeration of SAM accounts must be disabled.",
+      "category": "Security Settings",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+        "value_name": "RestrictAnonymousSAM",
+        "expected": 1,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\RestrictAnonymousSAM = 1",
+      "references": "CIS 2.3.10.1"
+    },
+    {
+      "id": "7.2.1",
+      "name": "WinRM Client: Disable Basic Authentication",
+      "description": "WinRM must not use Basic authentication (plaintext credentials over HTTP).",
+      "category": "Remote Management",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\WinRM\\Client",
+        "value_name": "AllowBasic",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WinRM\\Client\\AllowBasic = 0",
+      "references": "CIS 18.9.102.1.1"
+    },
+    {
+      "id": "7.2.2",
+      "name": "WinRM Service: Disable Basic Authentication",
+      "description": "WinRM Service must not use Basic authentication.",
+      "category": "Remote Management",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\WinRM\\Service",
+        "value_name": "AllowBasic",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WinRM\\Service\\AllowBasic = 0",
+      "references": "CIS 18.9.102.2.1"
+    }
+  ]
+}

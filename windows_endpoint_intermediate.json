@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "benchmark": "CIS Microsoft Windows 10 Enterprise Benchmark",
+    "version": "3.0.0",
+    "depth": "intermediate",
+    "system_type": "windows_endpoint"
+  },
+  "controls": [
+    {
+      "id": "8.1.1",
+      "name": "Windows Update: Auto-Update Enabled",
+      "description": "Automatic updates must not be completely disabled.",
+      "category": "Patch Management",
+      "severity": "Critical",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+        "value_name": "NoAutoUpdate",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Enable Windows Update via Group Policy: Computer Configuration > Administrative Templates > Windows Update",
+      "references": "CIS 18.9.108.1.1"
+    },
+    {
+      "id": "8.1.2",
+      "name": "Windows Update: Configure Automatic Updates = 4 (Download and Schedule)",
+      "description": "Automatic updates should be configured to download and schedule installation.",
+      "category": "Patch Management",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+        "value_name": "AUOptions",
+        "expected": 4,
+        "operator": "eq"
+      },
+      "remediation": "Set AUOptions = 4 (Auto download and schedule the install)",
+      "references": "CIS 18.9.108.1.2"
+    },
+    {
+      "id": "8.2.1",
+      "name": "LLMNR Disabled",
+      "description": "Link-Local Multicast Name Resolution (LLMNR) should be disabled to prevent MITM attacks.",
+      "category": "Network Security",
+      "severity": "High",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient",
+        "value_name": "EnableMulticast",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient\\EnableMulticast = 0",
+      "references": "CIS 18.5.4.2"
+    },
+    {
+      "id": "8.2.2",
+      "name": "Plain Text Password on LAN Manager Disabled",
+      "description": "LAN Manager must not send plain text passwords over the network.",
+      "category": "Network Security",
+      "severity": "Critical",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SYSTEM\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters",
+        "value_name": "EnablePlainTextPassword",
+        "expected": 0,
+        "operator": "eq"
+      },
+      "remediation": "Set EnablePlainTextPassword = 0 under LanmanWorkstation\\Parameters",
+      "references": "CIS 2.3.8.1"
+    },
+    {
+      "id": "8.3.1",
+      "name": "Audit Special Logon: Success",
+      "description": "Special logon events (admin equivalent) must be audited successfully.",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Special Logon",
+        "expected": "Success",
+        "operator": "contains"
+      },
+      "remediation": "auditpol /set /subcategory:'Special Logon' /success:enable",
+      "references": "CIS 17.5.6"
+    },
+    {
+      "id": "8.3.2",
+      "name": "Audit User Account Management: Success and Failure",
+      "description": "User account management events must be audited for both outcomes.",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "User Account Management",
+        "expected": "Success and Failure",
+        "operator": "eq"
+      },
+      "remediation": "auditpol /set /subcategory:'User Account Management' /success:enable /failure:enable",
+      "references": "CIS 17.2.5"
+    },
+    {
+      "id": "8.3.3",
+      "name": "Audit Audit Policy Change: Success and Failure",
+      "description": "Changes to audit policy must be audited.",
+      "category": "Audit Policy",
+      "severity": "Medium",
+      "check_type": "audit_policy",
+      "check_params": {
+        "subcategory": "Audit Policy Change",
+        "expected": "Success and Failure",
+        "operator": "eq"
+      },
+      "remediation": "auditpol /set /subcategory:'Audit Policy Change' /success:enable /failure:enable",
+      "references": "CIS 17.7.1"
+    },
+    {
+      "id": "8.4.1",
+      "name": "Screen Saver Grace Period <= 5 seconds",
+      "description": "The screen saver grace period must be 5 seconds or less.",
+      "category": "Session Security",
+      "severity": "Low",
+      "check_type": "registry",
+      "check_params": {
+        "hive": "HKLM",
+        "key": "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon",
+        "value_name": "ScreenSaverGracePeriod",
+        "expected": 5,
+        "operator": "lte"
+      },
+      "remediation": "Set HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\ScreenSaverGracePeriod = 5",
+      "references": "CIS 2.3.13.1"
+    }
+  ]
+}

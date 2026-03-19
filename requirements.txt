@@ -1,0 +1,11 @@
+# Core dependencies
+openpyxl>=3.1.2          # Excel report generation
+
+# Optional: Enhanced Windows API access
+# pywin32>=306            # win32api, win32con for advanced registry/GPO access
+# wmi>=1.5.1              # WMI queries for services, hardware, OS info
+# pywinrm>=0.4.3          # Remote WinRM-based scanning
+
+# Development & Testing
+# pytest>=7.4.0
+# pytest-cov>=4.0.0
