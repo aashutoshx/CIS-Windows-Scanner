@@ -454,7 +454,7 @@ Or configure via: **gpedit.msc → Advanced Audit Policy Configuration → Accou
 
 ### 🔄 Near-term (v1.2)
 
-- [ ] **HTML report output** — self-contained single-file HTML alternative to Excel,
+- [x] **HTML report output** — self-contained single-file HTML alternative to Excel,
       suitable for email delivery and browser-based viewing without Office installed
 
 - [ ] **Baseline delta comparison** — diff two scan reports to highlight regressions
